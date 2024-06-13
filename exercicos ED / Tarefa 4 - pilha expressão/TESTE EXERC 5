@@ -1,0 +1,48 @@
+/*Crie a função prefixa(e), que devolve a forma prefixa da expressão aritmética completamente parentesiada e. Em seguida, faça um programa para testar a função.
+Dicas:
+Percorra a expressão infixa da direita para a esquerda.
+Use strlen() para determinar o tamanho da expressão infixa.
+Use _strrev() para inverter uma cadeia de caracteres.
+*/
+
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+#include "pilha.h"
+
+void prefixa(char *expressaoInfixa) {
+  int j = 0;
+  static char expressaoPrefixa[256];
+  Pilha PilhaA = pilha(256);
+  
+  // Inverte a expressão infixa
+  _strrev(expressaoInfixa);
+
+  for(size_t i = strlen(expressaoInfixa); i > 0; i--){
+    if( isdigit(expressaoInfixa[i]) ) {
+      expressaoPrefixa[j++] = expressaoInfixa[i];
+    } else if( strchr("+*-/",expressaoInfixa[i]) ) {
+      empilha(expressaoInfixa[i], PilhaA);
+    } else if( expressaoInfixa[i]==')' ) {
+      expressaoPrefixa[j++] = desempilha(&PilhaA);
+    }
+  }
+  
+  expressaoPrefixa[j] = '\0';
+  destroip(&PilhaA);
+  
+  printf("Prefixa: ");
+  for(int i = j - 1; i >= 0; i--){
+     printf("%c", expressaoPrefixa[i]);
+  }
+  printf("\n");
+}
+
+int main(void) {
+  char expressaoInfixa[513];
+  printf("Infixa? ");
+  fgets(expressaoInfixa, sizeof(expressaoInfixa), stdin); // Corrigido
+  prefixa(expressaoInfixa);
+  
+  return 0;
+}
